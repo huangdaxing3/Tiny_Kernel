@@ -1,14 +1,18 @@
 #include "print.h"
-void main(void) {
+#include "init.h"
+#include "debug.h"
+#include "string.h"
+#include "memory.h"
+
+int main(void) {
     put_str("I am kernel\n");
-    put_int(0); 
-    put_char('\n'); 
-    put_int(9); 
-    put_char('\n'); 
-    put_int(0x00021a3f); 
-    put_char('\n'); 
-    put_int(0x12345678); 
-    put_char('\n'); 
-    put_int(0x00000000);
+    init_all();
+
+    void* addr = get_kernel_pages(3); 
+    put_str("\n get_kernel_page start vaddr is "); 
+    put_int((uint32_t)addr); 
+    put_str("\n");
+
     while(1);
+    return 0;
 }
