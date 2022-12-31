@@ -40,10 +40,10 @@ void* vaddr_get(enum pool_flags pf, uint32_t pg_cnt) {
     if (pf == PF_KERNEL) { 
         bit_idx_start = bitmap_scan(&kernel_vaddr.vaddr_bitmap, pg_cnt); 
         if (bit_idx_start == -1) { 
-        return NULL;
+            return NULL;
         } 
         while(cnt < pg_cnt) { 
-        bitmap_set(&kernel_vaddr.vaddr_bitmap, bit_idx_start + cnt++, 1); 
+            bitmap_set(&kernel_vaddr.vaddr_bitmap, bit_idx_start + cnt++, 1); 
         } 
         vaddr_start = kernel_vaddr.vaddr_start + bit_idx_start * PG_SIZE; 
     } else { 
