@@ -6,9 +6,9 @@
 #include "debug.h"
 #include "interrupt.h"
 #include "print.h"
+#include "../userprog/process.h"
 
 #define PG_SIZE 4096
-#define NULL 0
 
 struct task_struct* main_thread;         // 主线程 PCB 
 struct list thread_ready_list;			 //就绪队列
@@ -40,7 +40,7 @@ void kernel_thread(thread_func* function,void* func_arg)
 void thread_create(struct task_struct* pthread,thread_func function,void* func_arg)
 {
     /* 先预留中断使用栈的空间，可见 thread.h 中定义的结构 */
-    pthread->self_kstack -= sizeof(struct intr_struct);
+    pthread->self_kstack -= sizeof(struct intr_stack);
     /* 再留出线程栈空间，可见 thread.h 中定义 */
     pthread->self_kstack -= sizeof(struct thread_stack);
     struct thread_stack* kthread_stack = (struct thread_stack*)pthread->self_kstack; 
@@ -131,6 +131,9 @@ void schedule(void)
     //书上面的有点难理解 代码我写了一个我能理解的
     struct task_struct* next = (struct task_struct*)((uint32_t)thread_tag & 0xfffff000);
     next->status = TASK_RUNNING;
+
+    /* 激活任务页表等 */ 
+    process_activate(next);
     switch_to(cur, next);                                              //esp头顶的是 返回地址 +12是next +8是cur
 }
 
