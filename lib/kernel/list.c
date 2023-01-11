@@ -2,9 +2,6 @@
 #include "interrupt.h"
 #include "stdint.h"
 #include "debug.h"
-#include <stdbool.h>
-
-#define NULL 0
 
 /* 初始化双向链表 list */ 
 void list_init (struct list* list) { 
